@@ -4,30 +4,33 @@ import (
 	"fmt"
 	"net/http"
 
+	"../tool/wspool"
+
 	ws "../github.com/gorilla/websocket"
 )
 
 var (
-	onMessage = func(conn *Conn, message Message) {
+	onMessage = func(conn *wspool.Conn, message wspool.Message) {
 		all := conn.GetAllConns()
 		for _, v := range all {
-			v.(*Conn).WriteTextMessage([]byte(message.Message))
+			v.(*wspool.Conn).WriteTextMessage(message.Message)
 		}
 	}
 
-	onClose = func(conn *Conn) {
+	onClose = func(conn *wspool.Conn) {
 		all := conn.GetAllConns()
 		for _, v := range all {
-			v.(*Conn).WriteTextMessage([]byte(
+			v.(*wspool.Conn).WriteTextMessage([]byte(
 				fmt.Sprintf("用户 %d 离开了", conn.GetIndex()),
 			))
 		}
 	}
-	manager *Manager
+
+	manager *wspool.Manager
 )
 
 func init() {
-	manager = NewManager()
+	manager = wspool.NewManager()
 	manager.OnClose = onClose
 	manager.OnMessage = onMessage
 }

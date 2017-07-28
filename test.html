@@ -19,19 +19,12 @@
             };
             ws.onmessage = function(e) {
                var d = document.getElementById("chat");
-               var obj = JSON.parse(e.data)
-               d.innerHTML += ("<li>" + obj.Message + "</li>");
+               d.innerHTML += ("<li>" + e.data + "</li>");
             };
 
             var ele = document.getElementById("click");
             ele.onclick = function(e) {
-                var v = {
-                    Message : document.getElementById("content").value,
-                    From : 1,
-                    To : -1,
-                    MessageType : 1
-                };
-                ws.send(JSON.stringify(v))
+                ws.send(document.getElementById("content").value)
                 
             }
         </script>
