@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+
+    <body>
+        <input type="text" id="content">
+        <button id = "click">fuck</button>
+        
+        <ul class="" id="chat"></ul>
+    </body>
+        <script>
+            
+            ws = new WebSocket ("ws://127.0.0.1:8888/ws");
+
+            ws.onopen = function(e) {
+                console.log("Has open it");
+                ws.send("hello world");
+            };
+            ws.onmessage = function(e) {
+               var d = document.getElementById("chat");
+               var obj = JSON.parse(e.data)
+               d.innerHTML += ("<li>" + obj.Message + "</li>");
+            };
+
+            var ele = document.getElementById("click");
+            ele.onclick = function(e) {
+                var v = {
+                    Message : document.getElementById("content").value,
+                    From : 1,
+                    To : -1,
+                    MessageType : 1
+                };
+                ws.send(JSON.stringify(v))
+                
+            }
+        </script>
+</html>
